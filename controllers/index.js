@@ -1,7 +1,7 @@
 // IMPORTS
-const resource = require("./resource");
+const resources = require("./resources");
 const { allCTRL } = require("./root");
 const { _404CTRL } = require("./_404");
 
 // EXPORTS
-module.exports = { ...resource, allCTRL, _404CTRL };
+module.exports = { ...resources, allCTRL, _404CTRL };

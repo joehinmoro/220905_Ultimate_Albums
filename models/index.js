@@ -1,6 +1,6 @@
 // IMPORTS
-const { Resource } = require("./resources");
+const { Album } = require("./albums");
 const { User } = require("./users");
 
 // EXPORTS
-module.exports = { Resource, User };
+module.exports = { Album, User };

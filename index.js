@@ -5,6 +5,7 @@ const express = require("express");
 const { connect } = require("mongoose");
 require("dotenv").config();
 const { DB_URI, PORT, HOST } = process.env;
+const { seeder } = require("./dev/seeds");
 // route handlers
 const { rootRoutes, resourceRoutes, _404Routes } = require("./routes");
 
@@ -31,10 +32,12 @@ app.use(_404Routes);
 // DATABASE CONNECTION AND SERVER STARTUP
 // connect to DB and start server
 const server = async () => {
-    // connect(DB_URI);
-    // console.log("connected to database");
+    connect(DB_URI);
+    console.log("connected to database");
     app.listen(PORT, HOST);
     console.log("listening for request");
+    // seed data
+    seeder();
 };
 // start server
 server();
