@@ -1,0 +1,18 @@
+<%- include("../partials/head") %>
+<section class="text-center mt-3 p-3">
+    <h2><%= album.title %></h2>
+    <h4><a href="#" class="text-light text-decoration-none"><%= album.artiste %></a></h4>
+
+    <div class="container w-50 mt-3">
+        <ol class="list-group list-group-numbered list-group-flush">
+            <% for(let song of album.songs){ %>
+            <li class="list-group-item bg-dark text-light border-secondary text-start">
+                <%= song %>
+            </li>
+            <% } %>
+        </ol>
+    </div>
+
+    <section class="container mt-3"></section>
+</section>
+<%- include("../partials/foot") %>

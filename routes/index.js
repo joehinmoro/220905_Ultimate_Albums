@@ -1,7 +1,7 @@
 // IMPORTS
 const rootRoutes = require("./root");
-const resourceRoutes = require("./resources");
+const albumRoutes = require("./albums");
 const _404Routes = require("./_404");
 
 // EXPORTS
-module.exports = { rootRoutes, resourceRoutes, _404Routes };
+module.exports = { rootRoutes, albumRoutes, _404Routes };

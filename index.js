@@ -7,7 +7,7 @@ require("dotenv").config();
 const { DB_URI, PORT, HOST } = process.env;
 const { seeder } = require("./dev/seeds");
 // route handlers
-const { rootRoutes, resourceRoutes, _404Routes } = require("./routes");
+const { rootRoutes, albumRoutes, _404Routes } = require("./routes");
 
 // APP SETTINGS
 // instatiate app
@@ -20,12 +20,16 @@ app.set("views", join(__dirname, "views"));
 // GENERAL MIDDLEWARE
 // serve static files
 app.use(express.static(join(__dirname, "public")));
+// parse form data
+app.use(express.urlencoded({ extended: true }));
+// parse json data
+app.use(express.json());
 
 // ROUTES
 // root (redirect)
 app.use("/", rootRoutes);
 // resource
-app.use("/resources", resourceRoutes);
+app.use("/albums", albumRoutes);
 // 404 (not found)
 app.use(_404Routes);
 
