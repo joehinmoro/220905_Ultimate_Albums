@@ -15,6 +15,7 @@ const albumSchema = new Schema(
         },
         songs: {
             type: Array,
+            required: true,
             minlength: 1,
         },
         genre: {

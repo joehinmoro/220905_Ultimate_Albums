@@ -3,30 +3,44 @@
     <h2>Albums</h2>
 
     <section class="container mt-3">
-        <div class="card-group">
+        <div class="container text-start">
+            <a href="/albums/new" class="btn btn-outline-light">new</a>
+        </div>
+        <div class="row mt-3">
             <% for (let album of albums) {%>
-            <div class="card text-bg-dark border-light mx-auto">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <a href="/albums/<%=album._id%>" class="text-light text-decoration-none"
-                            ><%= album.title %></a
+            <div class="col-sm-12 col-md-6 col-lg-4 mt-3">
+                <div class="card text-bg-dark border-light mx-auto h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="/albums/<%=album._id%>" class="text-light text-decoration-none"
+                                ><%= album.title %></a
+                            >
+                        </h5>
+                        <h6 class="card-subtitle mb-2">
+                            <a href="" class="text-muted text-decoration-none"
+                                ><%= album.artiste %></a
+                            >
+                        </h6>
+                        <ol class="list-group list-group-numbered list-group-flush">
+                            <% for (let song of album.songs){ %>
+                            <li
+                                class="list-group-item bg-dark text-light border-secondary text-start"
+                            >
+                                <%= song %>
+                            </li>
+                            <% } %>
+                        </ol>
+                    </div>
+                    <div class="card-footer">
+                        <a
+                            href="/albums/<%=album._id%>"
+                            class="btn btn-outline-light btn-sm card-link"
                         >
-                    </h5>
-                    <h6 class="card-subtitle mb-2">
-                        <a href="" class="text-muted text-decoration-none"><%= album.artiste %></a>
-                    </h6>
-                    <ol class="list-group list-group-numbered list-group-flush">
-                        <% for (let song of album.songs){ %>
-                        <li class="list-group-item bg-dark text-light border-secondary text-start">
-                            <%= song %>
-                        </li>
-                        <% } %>
-                    </ol>
-                </div>
-                <div class="card-footer">
-                    <btn href="#" class="btn btn-outline-light btn-sm card-link">Expand </btn>
-                    <btn href="#" class="btn btn-outline-light btn-sm card-link">Edit</btn>
-                    <btn href="#" class="btn btn-outline-light btn-sm card-link">Delete</btn>
+                            Expand
+                        </a>
+                        <a href="#" class="btn btn-outline-light btn-sm card-link">Edit</a>
+                        <a href="#" class="btn btn-outline-light btn-sm card-link">Delete</a>
+                    </div>
                 </div>
             </div>
             <% } %>

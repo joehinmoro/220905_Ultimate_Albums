@@ -9,10 +9,10 @@ const { indexCTRL, showCTRL, newCTRL, createCTRL, editCTRL, updateCTRL, deleteCT
 // router.use(userAuth);
 // index
 router.get("/", indexCTRL);
-// show
-router.get("/:id", showCTRL);
 // new
 router.get("/new", newCTRL);
+// show
+router.get("/:id", showCTRL);
 // create
 router.post("/", createCTRL);
 // edit
