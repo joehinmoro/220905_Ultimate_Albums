@@ -16,7 +16,7 @@ router.get("/:id", showCTRL);
 // create
 router.post("/", createCTRL);
 // edit
-router.get("/edit", editCTRL);
+router.get("/:id/edit", editCTRL);
 // update
 router.patch("/:id", updateCTRL);
 // delete

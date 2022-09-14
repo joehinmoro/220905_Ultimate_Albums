@@ -1,6 +1,6 @@
 // MIDDLEWARE FUNCTIONS
 // method override
-module.exports.methodOverride = (req, res, next) => {
+const methodOverride = (req, res, next) => {
     // destructure custom method from req query
     const { _method } = req.query;
     // check for custom method
@@ -10,3 +10,6 @@ module.exports.methodOverride = (req, res, next) => {
     // next
     next();
 };
+
+// EXPORTS
+module.exports = { methodOverride };

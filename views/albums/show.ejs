@@ -12,5 +12,9 @@
             <% } %>
         </ol>
     </div>
+    <div class="container">
+        <a href="/albums/<%=album._id%>/edit" class="btn btn-outline-light">Edit</a>
+        <a href="/albums/<%=album._id%>/?_method=delete" class="btn btn-outline-light">Delete</a>
+    </div>
 </section>
 <%- include("../partials/foot") %>

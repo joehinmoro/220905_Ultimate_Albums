@@ -38,8 +38,16 @@
                         >
                             Expand
                         </a>
-                        <a href="#" class="btn btn-outline-light btn-sm card-link">Edit</a>
-                        <a href="#" class="btn btn-outline-light btn-sm card-link">Delete</a>
+                        <a
+                            href="/albums/<%=album._id%>/edit"
+                            class="btn btn-outline-light btn-sm card-link"
+                            >Edit</a
+                        >
+                        <a
+                            href="/albums/<%=album._id%>/?_method=delete"
+                            class="btn btn-outline-light btn-sm card-link"
+                            >Delete</a
+                        >
                     </div>
                 </div>
             </div>

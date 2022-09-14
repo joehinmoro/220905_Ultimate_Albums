@@ -8,6 +8,7 @@ const { DB_URI, PORT, HOST } = process.env;
 const { seeder } = require("./dev/seeds");
 // route handlers
 const { rootRoutes, albumRoutes, _404Routes } = require("./routes");
+const { methodOverride } = require("./middleware");
 
 // APP SETTINGS
 // instatiate app
@@ -24,6 +25,8 @@ app.use(express.static(join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 // parse json data
 app.use(express.json());
+// method override
+app.use(methodOverride);
 
 // ROUTES
 // root (redirect)
