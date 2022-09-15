@@ -11,11 +11,11 @@ const signupUser = async (req, res) => {
         const { email, password } = req.body;
 
         try {
-            // attempt login
-            const user = await User.signup(email, password);
+            // attempt signup
+            const user = await User.create(email, password);
             if (!user) return res.status(400).json({ error: "signup error" });
             // generate login token
-            const token = genToken({ userID: user._id });
+            // const token = genToken({ userID: user._id });
             // login
             res.status(200).json({ email, token });
         } catch (error) {

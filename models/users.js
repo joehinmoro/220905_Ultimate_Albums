@@ -15,6 +15,7 @@ const userSchema = new Schema(
         password: {
             type: String,
             required: true,
+            minlength: [6, "password must be at least 6 chars"],
         },
     },
     { timestamps: true }
