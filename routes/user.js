@@ -1,15 +1,15 @@
 // IMPORT
 const router = require("express").Router();
-
+const { getSignupCTRL, postSignupCTRL } = require("../controllers").users;
 // ROUTES
 // signup form
-router.get("/users/signup");
+router.get("/signup", getSignupCTRL);
 // signup post
-router.post("/users/signup");
+router.post("/signup", postSignupCTRL);
 // login form
-router.get("/users/login");
+router.get("/login");
 // login post
-router.post("/users/login");
+router.post("/login");
 
 // EXPORTS
 module.exports = router;

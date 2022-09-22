@@ -2,12 +2,13 @@
 // packages
 const { join } = require("path");
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const { connect } = require("mongoose");
 require("dotenv").config();
 const { DB_URI, PORT, HOST } = process.env;
 const { seeder } = require("./dev/seeds");
 // route handlers
-const { rootRoutes, albumRoutes, _404Routes } = require("./routes");
+const { rootRoutes, albumRoutes, userRoutes, _404Routes } = require("./routes");
 const { methodOverride } = require("./middleware");
 
 // APP SETTINGS
@@ -21,6 +22,8 @@ app.set("views", join(__dirname, "views"));
 // GENERAL MIDDLEWARE
 // serve static files
 app.use(express.static(join(__dirname, "public")));
+// parse cookies
+app.use(cookieParser());
 // parse form data
 app.use(express.urlencoded({ extended: true }));
 // parse json data
@@ -31,8 +34,18 @@ app.use(methodOverride);
 // ROUTES
 // root (redirect)
 app.use("/", rootRoutes);
-// resource
+// albums
 app.use("/albums", albumRoutes);
+// users
+app.use("/users", userRoutes);
+
+app.get("/setcookies", (req, res) => {
+    console.log(req.cookies);
+    res.setHeader("Set-Cookie", "tokenfS=lolol");
+    res.cookie("token", "lalal", { maxAge: 36000, httpOnly: true });
+    res.json(req.cookies);
+});
+
 // 404 (not found)
 app.use(_404Routes);
 

@@ -1,5 +1,5 @@
 // IMPORTS
-const { Album } = require("../../models");
+const { Album, User } = require("../../models");
 // SEED DATA
 // albums seed data
 const albumSeed = [
@@ -38,6 +38,7 @@ const albumSeed = [
 const seeder = async () => {
     try {
         await Album.deleteMany();
+        await User.deleteMany();
         await Album.insertMany(albumSeed);
     } catch (error) {}
 };

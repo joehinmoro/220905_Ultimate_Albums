@@ -10,12 +10,14 @@ const userSchema = new Schema(
             type: String,
             lowercase: true,
             unique: true,
-            required: true,
+            required: [true, "please provide email"],
+            validate: [isEmail, "please enter a valid email"],
         },
         password: {
             type: String,
-            required: true,
+            required: [true, "please provide password"],
             minlength: [6, "password must be at least 6 chars"],
+            validate: [isStrongPassword, "please enter a strong password"],
         },
     },
     { timestamps: true }
@@ -60,6 +62,29 @@ userSchema.statics.login = async function (email, password) {
     // return user
     return user;
 };
+
+// MIDDLEWARE
+// signup
+userSchema.pre("save", async function (next) {
+    // user password hashing
+    // generate salt
+    console.log(this);
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    console.log(this);
+
+    next();
+});
+
+userSchema.post("save", async function () {
+    // user password hashing
+    // generate salt
+    // const salt = await bcrypt.genSalt(10);
+    // const hashedPassword = await bcrypt.hash(this.password)
+    console.log(this);
+
+    // next();
+});
 
 // MODEL
 const User = model("User", userSchema);

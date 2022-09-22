@@ -1,0 +1,93 @@
+<%- include("../partials/head") %>
+<section class="text-center mt-3 p-3 container">
+    <h2>New User</h2>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 mx-auto mt-3 border py-3 border-radius">
+            <form>
+                <div class="">
+                    <div class="form-floating mb-3">
+                        <input
+                            type="text"
+                            class="form-control bg-dark text-light"
+                            id="emailCtrl"
+                            placeholder="Email"
+                            name="email"
+                        />
+                        <label for="emailCtrl">Email</label>
+                        <div>
+                            <p class="emailErr"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="">
+                    <div class="form-floating mb-3">
+                        <input
+                            type="password"
+                            class="form-control bg-dark text-light"
+                            id="passwordCtrl"
+                            placeholder="Password"
+                            name="password"
+                        />
+                        <label for="passwordCtrl">Password</label>
+                        <div>
+                            <p class="passwordErr"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container text-center">
+                    <button class="btn btn-outline-light">Signup</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<%- include("../partials/foot") %>
+
+<script>
+    // select elements
+    const signupForm = document.querySelector("form");
+    const emailErr = document.querySelector(".emailErr");
+    const passwordErr = document.querySelector(".passwordErr");
+
+    signupForm.addEventListener("submit", async (evt) => {
+        // prevent default
+        evt.preventDefault();
+
+        // clear previous error messages
+        emailErr.textContent = "";
+        passwordErr.textContent = "";
+
+        // extract form control values
+        const email = signupForm.email.value;
+        const password = signupForm.password.value;
+
+        console.log(email, password);
+        try {
+            // make signup request
+            const res = await fetch("/users/signup", {
+                method: "POST",
+                body: JSON.stringify({ email, password }),
+                headers: { "Content-Type": "application/json" },
+            });
+            const data = await res.json();
+
+            // check for signup error
+            if (data.errors) {
+                emailErr.textContent = data.errors.email;
+                passwordErr.textContent = data.errors.password;
+            }
+
+            // redirect to /albums
+            if (data.id) location.assign("/albums");
+
+            console.log(data, emailErr);
+        } catch (error) {
+            console.log(error);
+        }
+    });
+    // select form field values
+    const email = signupForm.email.value;
+    const password = signupForm.password.value;
+</script>
