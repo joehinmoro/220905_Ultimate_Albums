@@ -4,23 +4,27 @@ const { User } = require("../models/");
 
 // HELPERS
 const genToken = (payload) => jwt.sign(payload, process.env.SECRET, { expiresIn: "2d" });
-const signupErrorHandling = (error) => {
+const ErrorHandler = (error) => {
     // define custom error object
-    const customErrors = { email: "", password: "" };
+    const errorObj = { email: "", password: "" };
 
+    // signup error
     // check for user validation error
     if (error.message.includes("User validation failed")) {
         // extract error message based of input field
         Object.values(error.errors).map(({ properties }) => {
-            customErrors[properties.path] = properties.message;
+            errorObj[properties.path] = properties.message;
         });
     }
-
     // check for non-unique email entry code
-    if (error.code === 11000) customErrors.email = "email already in use";
+    if (error.code === 11000) errorObj.email = "email already in use";
 
-    // return error object
-    return customErrors;
+    // login error
+    // email error
+    if (error.message.includes("login:email")) errorObj.email = error.message.split(", ")[1];
+    if (error.message.includes("login:password")) errorObj.password = error.message.split(", ")[1];
+
+    return errorObj;
 };
 
 // CONTROL FUNCTION
@@ -28,7 +32,7 @@ const signupErrorHandling = (error) => {
 const getSignupCTRL = (req, res) => {
     try {
         //   render signup view
-        res.render("users/signup", { title: "Signup", navLink: "users" });
+        res.render("users/signup", { title: "Signup", navLink: "login" });
     } catch (error) {
         res.status(500).json({ error: "server error" });
     }
@@ -52,7 +56,7 @@ const postSignupCTRL = async (req, res) => {
             res.status(200).json({ id });
         } catch (error) {
             console.log(error.code, error.message);
-            const errors = signupErrorHandling(error);
+            const errors = ErrorHandler(error);
             res.status(400).json({ errors });
         }
         // res.status(200).json({ email, password });
@@ -60,9 +64,17 @@ const postSignupCTRL = async (req, res) => {
         res.status(500).json({ error: "server error" });
     }
 };
-
+// login form - GET - /login
+const getLoginCTRL = (req, res) => {
+    try {
+        //   render login view
+        res.render("users/login", { title: "Login", navLink: "login" });
+    } catch (error) {
+        res.status(500).json({ error: "server error" });
+    }
+};
 // login
-const loginUser = async (req, res) => {
+const postLoginCTRL = async (req, res) => {
     try {
         // destructure email and password from req body
         const { email, password } = req.body;
@@ -72,11 +84,13 @@ const loginUser = async (req, res) => {
             const user = await User.login(email, password);
             if (!user) return res.status(400).json({ error: "login error" });
             // generate login token
-            const token = genToken({ user: user._id });
+            // const token = genToken({ user: user._id });
             // login
-            res.status(200).json({ email, token });
+            res.status(200).json({ id: user._id });
         } catch (error) {
-            res.status(400).json(error.message);
+            console.log(error.code, error.message);
+            const errors = ErrorHandler(error);
+            res.status(400).json({ errors });
         }
     } catch (error) {
         res.status(500).json({ error: "server error" });
@@ -84,4 +98,4 @@ const loginUser = async (req, res) => {
 };
 
 // EXPORTS
-module.exports = { getSignupCTRL, postSignupCTRL };
+module.exports = { getSignupCTRL, postSignupCTRL, getLoginCTRL, postLoginCTRL };

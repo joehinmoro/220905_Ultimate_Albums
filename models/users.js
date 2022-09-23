@@ -30,34 +30,38 @@ userSchema.statics.signup = async function (email, password, role) {
     if (!email || !password) throw Error("fields must be filled");
 
     // validate email format and password strength
-    if (!isEmail(email)) throw Error("email is invalid");
-    if (!isStrongPassword(password)) throw Error("password is weak");
+    // if (!isEmail(email)) throw Error("email is invalid");
+    // if (!isStrongPassword(password)) throw Error("password is weak");
 
     // validate email is available
-    const emailExists = await this.findOne({ email });
-    if (emailExists) throw Error("email is already in use by another user");
+    // const emailExists = await this.findOne({ email });
+    // if (emailExists) throw Error("email is already in use by another user");
 
     // hash password
-    const passwordSalt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, passwordSalt);
+    const salt = await bcrypt.genSalt(10);
+    password = await bcrypt.hash(password, salt);
 
     // create and return user
-    const user = await this.create({ email, password: hashedPassword });
+    const user = await this.create({ email, password });
     return user;
 };
 
 // login static method
 userSchema.statics.login = async function (email, password) {
     // validate email and password not null
-    if (!email || !password) throw Error("fields must be filled");
+    if (!email) throw Error("login:email, email field must not be empty");
+    if (!password) throw Error("login:password, password field must not be empty");
+
+    // validate email format
+    if (!isEmail(email)) throw Error("login:email, enter a valid email");
 
     // validate email
     const user = await this.findOne({ email });
-    if (!user) throw Error("account not found");
+    if (!user) throw Error("login:email, email not registered to an account");
 
     // validate password
     const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) throw Error("password is invalid");
+    if (!validPassword) throw Error("login:password, incorrect password");
 
     // return user
     return user;
