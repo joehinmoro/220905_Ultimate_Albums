@@ -3,7 +3,9 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../models/");
 
 // HELPERS
+// jwt generator
 const genToken = (payload) => jwt.sign(payload, process.env.SECRET, { expiresIn: "2d" });
+// signup, login error handler
 const ErrorHandler = (error) => {
     // define custom error object
     const errorObj = { email: "", password: "" };
@@ -20,7 +22,6 @@ const ErrorHandler = (error) => {
     if (error.code === 11000) errorObj.email = "email already in use";
 
     // login error
-    // email error
     if (error.message.includes("login:email")) errorObj.email = error.message.split(", ")[1];
     if (error.message.includes("login:password")) errorObj.password = error.message.split(", ")[1];
 
@@ -37,7 +38,7 @@ const getSignupCTRL = (req, res) => {
         res.status(500).json({ error: "server error" });
     }
 };
-// sign up
+// signup logic - POST - /signup
 const postSignupCTRL = async (req, res) => {
     try {
         // destructure email and password from req body
@@ -46,16 +47,15 @@ const postSignupCTRL = async (req, res) => {
         try {
             // attempt signup
             const user = await User.create({ email, password });
-            if (!user) return res.status(400).json({ error: "signup error" });
-            const id = user._id;
-            // generate login token
-            // const token = genToken({ userID: user._id });
-            // login
+            // destruct new user id
+            const { _id: id } = user;
+            // generate auth token
             const token = genToken({ id });
-            res.cookie("token", token, { httpOnly: true, maxAge: 360000000 });
+            // create auth token cookie
+            res.cookie("token", token, { httpOnly: true, maxAge: 172800000 });
+            // success response
             res.status(200).json({ id });
         } catch (error) {
-            console.log(error.code, error.message);
             const errors = ErrorHandler(error);
             res.status(400).json({ errors });
         }
@@ -64,7 +64,7 @@ const postSignupCTRL = async (req, res) => {
         res.status(500).json({ error: "server error" });
     }
 };
-// login form - GET - /login
+// login form - GET - users/login
 const getLoginCTRL = (req, res) => {
     try {
         //   render login view
@@ -73,7 +73,7 @@ const getLoginCTRL = (req, res) => {
         res.status(500).json({ error: "server error" });
     }
 };
-// login
+// login logic - POST - users/login
 const postLoginCTRL = async (req, res) => {
     try {
         // destructure email and password from req body
@@ -82,13 +82,15 @@ const postLoginCTRL = async (req, res) => {
         try {
             // attempt login
             const user = await User.login(email, password);
-            if (!user) return res.status(400).json({ error: "login error" });
-            // generate login token
-            // const token = genToken({ user: user._id });
-            // login
-            res.status(200).json({ id: user._id });
+            // destruct new user id
+            const { _id: id } = user;
+            // generate auth token
+            const token = genToken({ id });
+            // create auth token cookie
+            res.cookie("token", token, { httpOnly: true, maxAge: 172800000 });
+            // success response
+            res.status(200).json({ id });
         } catch (error) {
-            console.log(error.code, error.message);
             const errors = ErrorHandler(error);
             res.status(400).json({ errors });
         }
@@ -96,6 +98,17 @@ const postLoginCTRL = async (req, res) => {
         res.status(500).json({ error: "server error" });
     }
 };
+// logout logic
+const logoutGET = (req, res) => {
+    try {
+        // set token value to null
+        res.cookie("token", "", { maxAge: 1 });
+        // redirect to login
+        res.redirect("/users/login");
+    } catch (error) {
+        res.status(500).json({ error: "server error" });
+    }
+};
 
 // EXPORTS
-module.exports = { getSignupCTRL, postSignupCTRL, getLoginCTRL, postLoginCTRL };
+module.exports = { getSignupCTRL, postSignupCTRL, getLoginCTRL, postLoginCTRL, logoutGET };

@@ -4,27 +4,54 @@ const { User } = require("../models");
 
 // MIDDLEWARE FUNCTIONS
 const userAuth = async (req, res, next) => {
-    // verify auth
-    console.log(req.headers);
-    const { authorization } = req.headers;
-
-    if (!authorization) return res.status(401).json({ error: "unauthorized request" });
-
-    const token = authorization.split(" ")[1];
+    // destruct auth token
+    res.locals.userEmail = null;
+    const { token } = req.cookies;
+    if (!token) return res.redirect("/users/login");
 
     try {
         // verify token
-        const { userID } = jwt.verify(token, process.env.SECRET);
-        // query user using userID from payload
-        // const userRecord = await User.findById(userID).select("prop");
-        // if (!userRecord) return res.status(400).json({ error: "authorization error" });
-        // // attach necessary property to req body from user record
-        // req.prop = userRecord.prop
+        const { id } = jwt.verify(token, process.env.SECRET);
+
+        // query user email using user ID from payload
+        const { email } = await User.findById(id).select("email");
+
+        // store user email in locals
+        res.locals.userEmail = email;
+
         next();
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.redirect("/users/login");
     }
 };
 
+const userAuth1 = async (req, res, next) => {
+    // destruct auth token
+    const { token } = req.cookies;
+    if (!token) return res.redirect("/users/login");
+
+    try {
+        // verify token
+        const { id } = jwt.verify(token, process.env.SECRET);
+        if (!id) return res.redirect("/users/login");
+
+        // query user email using user ID from payload
+        const userEmail = await User.findById(id).select("email");
+        if (!userEmail) return res.redirect("/users/login");
+
+        // save user email to res locals
+        res.locals.userEmail = userEmail;
+        next();
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+        res.redirect("/users/login");
+    }
+};
+
+const userEmail = (req, res, next) => {
+    res.locals.userEmail = res.locals.userEmail ?? null;
+    next();
+};
+
 // EXPORTS
-module.exports = { userAuth };
+module.exports = { userAuth, userEmail };

@@ -1,12 +1,12 @@
 // IMPORTS
 const router = require("express").Router();
-// const { userAuth } = require("../middleware/auth");
+const { userAuth } = require("../middleware/auth");
 const { indexCTRL, showCTRL, newCTRL, createCTRL, editCTRL, updateCTRL, deleteCTRL } =
     require("../controllers").albums;
 
 // ROUTES
 // auth
-// router.use(userAuth);
+router.use(userAuth);
 // index
 router.get("/", indexCTRL);
 // new

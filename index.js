@@ -10,6 +10,7 @@ const { seeder } = require("./dev/seeds");
 // route handlers
 const { rootRoutes, albumRoutes, userRoutes, _404Routes } = require("./routes");
 const { methodOverride } = require("./middleware");
+const { userEmail } = require("./middleware/auth");
 
 // APP SETTINGS
 // instatiate app
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // method override
 app.use(methodOverride);
+app.use(userEmail);
 
 // ROUTES
 // root (redirect)

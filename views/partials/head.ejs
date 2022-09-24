@@ -26,9 +26,14 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                         <div class="navbar-nav ms-auto">
-                            <a class="nav-link <%= navLink === "albums" ? "active" : ""; %>" aria-current="page" href="/albums">Albums</a>
-                            <a class="nav-link <%= navLink === "signup" ? "active" : ""; %>" aria-current="page" href="/users/signup">Signup</a>
-                            <a class="nav-link <%= navLink === "login" ? "active" : ""; %>" aria-current="page" href="/users/login">Login</a>
+                            <a class="nav-link me-3 <%= navLink === "albums" ? "active" : ""; %>" href="/albums">Albums</a>
+                            <% if (userEmail) { %> 
+                            <span class="nav-link <%= navLink === "albums" ? "active" : ""; %>">Welcome, <%=userEmail%></span>
+                            <a class="nav-link <%= navLink === "albums" ? "active" : ""; %>" href="/users/logout">Log Out</a>
+                            <% } else { %> 
+                            <a class="nav-link <%= navLink === "signup" ? "active" : ""; %>" href="/users/signup">Signup</a>
+                            <a class="nav-link <%= navLink === "login" ? "active" : ""; %>" href="/users/login">Login</a>
+                            <% } %> 
                         </div>
                     </div>
                 </div>
